@@ -5,6 +5,7 @@ $fs = 0.4;
 
 // Pieces of the part that will hold the GY521 board in place
 module gy521_holder() {
+
     cube([5,24,12]);
     translate([0,0,11.99]) cube([5,1.6,8]);
     //translate([7,0,11.99]) cube([7,1.6,8]);
@@ -14,15 +15,21 @@ module gy521_holder() {
     
 }
 
+GY_X = 31;
+GY_Y = 26;
+GY_Z = 22;
+GY_WALL = 1.6;
+
 module gy521_main_box() {
+    
     // Form the outer frame
-    color("blue") openbox([31,26,22]);
+    color("#480059") openbox([GY_X,GY_Y,GY_Z]);
 
     // Add the gy521 PCB holder
-    color("#8080ff") translate([1.6,1.6,0]) gy521_holder();
+    color("#9000B2") translate([GY_WALL,GY_WALL,0]) gy521_holder();
 
     // Add the screw holder
-    color("red") translate([27.25,22.25,0]) screwpost(20,3,2,8);
+    color("#f7e400") translate([27.25,22.25,0]) screwpost(20,3,2,8);
 
     // TODO: add cutout for grommet, generate lid
 }
@@ -38,7 +45,11 @@ module gy521_grommet_hole() {
 
 }
 
+// Main box with grommet hole differenced out
 difference() {
     gy521_main_box();
     gy521_grommet_hole();
 }
+
+// Lid is generated separately
+color("#f7e400") translate([GY_X + 10,0,0]) openbox_lid([GY_X,GY_Y,GY_Z],2);
