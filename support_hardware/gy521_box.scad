@@ -1,3 +1,21 @@
+// GY521 container box
+// TODO make some sort of headset mount
+
+// design by Flint Million - 11-2023
+
+// History:
+//  v3 - parameterize the grommet hole
+//       reduce height of channel on left front edge to accommodate IC
+//       use math to position both the grommet hole and the grommet stub on the lid
+//  v2 - widen the IC slot
+//       * the board doesn't slot all the way down, small 6-pin SOIC in the way
+//       * the grommet still won't fit, make even larger (parameterize)
+//       * the grommet hole doesn't match with the slot in the lid (parameterize)
+//  v1 - initial test
+//       * IC does not fit, too narrow
+//       * grommet does not fit
+//       * box won't close
+
 use <libraries/openbox.scad>
 use <libraries/screwpost.scad>
 
@@ -14,22 +32,23 @@ module gy521_holder() {
     SIDE_THICK = 2;
 
     // bottom section
-    cube([FRONT_THICK,5,SHELF]);
+    cube([FRONT_THICK,5,SHELF/2]); // a bit lower to accommodate the IC
     translate([0,Y_MAX - 5,0]) cube([FRONT_THICK,5,SHELF]);
-    
     translate([FRONT_THICK + BOARD_THICK,0,0]) cube([7,24,SHELF]);
     
     // top sections
     translate([FRONT_THICK + BOARD_THICK,Y_MAX - SIDE_THICK + 0.01,SHELF - 0.01]) cube([7,SIDE_THICK,8]);
-    translate([0,0.01,SHELF - 0.01]) cube([FRONT_THICK,SIDE_THICK,8]);
+    //translate([0,0.01,SHELF/2 - 0.01]) cube([FRONT_THICK,SIDE_THICK,8+(SHELF/2)]);
     translate([0,Y_MAX - SIDE_THICK + 0.01,SHELF - 0.01]) cube([FRONT_THICK,SIDE_THICK,8]);
     
 }
 
-GY_X = 25;
-GY_Y = 26;
-GY_Z = 22;
-GY_WALL = 1.6;
+// Sets the global size of the main box
+GY_X = 25;              //  /
+GY_Y = 26;              // <-- size of overall box sans lid
+GY_Z = 22;              //  \ 
+GY_WALL = 1.6;          // thickness of box wall
+GROMMET = 4.25;         // radius of grommet hole
 
 module gy521_main_box() {
     
@@ -42,45 +61,46 @@ module gy521_main_box() {
     // Add the screw holder
     color("#f7e400") translate([GY_X - 3.5,GY_Y - 3.5,0]) screwpost(20,3,2,8);
     // Screw hole position is 3.5 + (3 - 1) = 5.5 from edges
-    
-    // TODO: add cutout for grommet, generate lid
 }
 
 module gy521_grommet_hole() {
 
     hull() {
-        translate([GY_X - (GY_WALL * 1.5),3.9,GY_Z - 3.1]) cube([GY_WALL * 2,7,7]);
+        translate([GY_X - (GY_WALL * 1.5),3.9,GY_Z - 3.1]) cube([GY_WALL * 2,GROMMET*2,GROMMET*2]);
 
-        translate([GY_X - (GY_WALL / 2),7,GY_Z - 4.1])
+        translate([GY_X - (GY_WALL / 2),GROMMET*2,GY_Z - 4.1])
         // Rotate and move the grmmet hole
         rotate([90,0,90])
         translate([0,0,-1.6]) 
         // Form the main grommet hole
-        cylinder(h=GY_WALL * 2,r=3.5,$fa=1);
+        cylinder(h=GY_WALL * 2,r=GROMMET,$fa=1);
     }
 }
 
 module gy521_grommet_stub() {
     
-    difference() {
+   difference() {
         // start with cuboid
-        translate([(GY_X * 2) + 10 - GY_WALL, 0, GY_WALL]) cube([GY_WALL,7,7]);
+        translate([(GY_X * 2) + 10 - GY_WALL, 0, GY_WALL]) cube([GY_WALL,GROMMET*2,GROMMET*2]);
 
         // subtract circle
-        translate([(GY_X * 2) - 0.01 + 10,3.5,3.5+GY_WALL+0.2])
+        color("white") translate([
+            (GY_X * 2) + 9.99,
+            GROMMET,
+            GROMMET + GY_WALL + 0.2])
         rotate([90,0,90])
         translate([0,0,-1.6]) 
-        cylinder(h=GY_WALL+0.02,r=3.5,$fa=1);
+        cylinder(h=GY_WALL+0.02,r=GROMMET,$fa=1);
 
         // subtract upper half of cuboid
-        translate([(GY_X * 2) + 9.99 - GY_WALL, -0.01, GY_WALL + 1.49]) cube([GY_WALL+0.02,7.02,7.02]);
+        translate([(GY_X * 2) + 9.99 - GY_WALL, -0.01, GY_WALL + 1.49]) cube([GY_WALL+0.02,GROMMET*2+0.02,GROMMET*2+0.02]);
     }
 }
 
 module gy521_lid() {
     color("#f7e400") translate([GY_X + 10,0,0]) openbox_lid([GY_X,GY_Y],1.6,offset=0.8);
 
-    translate([0,GY_Y - (GY_WALL * 2) - 7,0]) gy521_grommet_stub();
+    translate([0,GY_Y - (GY_WALL * 2) - (GROMMET * 2) ,0]) gy521_grommet_stub();
 }
 
 // Generate pieces
