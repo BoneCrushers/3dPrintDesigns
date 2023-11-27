@@ -1,0 +1,4 @@
+# don't include compiled STLs from SCAD files - use OpenSCAD to generate them yourself.
+*.stl
+# don't include generated Gcode - it's printer-specific.
+*.gcode
