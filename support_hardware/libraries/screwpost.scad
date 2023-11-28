@@ -8,7 +8,7 @@ module screwpost(h,r,t,sh)
     // Make a screw post.
     // h = height of entire post
     // r = radius of entire post
-    // t = thickness of screw hole
+    // t = diameter of screw hole
     // sh = depth of screw hole
 
     difference() {
@@ -21,4 +21,3 @@ module screwpost(h,r,t,sh)
         // hole "penetrates" the skin of the larger cylinder
     }
 }
-
