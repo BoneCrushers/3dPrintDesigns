@@ -4,7 +4,12 @@
 // design by Flint Million - 11-2023
 
 // History:
+//  v2 - fix 3.5mm hole size
+//       fix hole spacing for amps
 //  v1 - initial test
+//       * oops mistyped the size of the 3.5mm jack holes
+//         (should have been 6mm, not 8mm)
+//       * amp holes too close together
 
 // Note - OpenSCAD (and STL) does not explicitly define the "unit".
 // However, the default is to treat one unit in SCAD as one millimeter.
@@ -26,7 +31,7 @@ MX_Z = MX_PCB_Z + 17.4; // includes height of jumper pin + jumper
 
 // Hole sizes
 AVI_HOLE = 16.4;        // spec sheet says 16mm, give 0.4mm for tolerance
-PHONE_HOLE = 8.4;       // measured with caliper at 8mm, give 0.4mm for tolerance
+PHONE_HOLE = 6.4;       // measured with caliper at 6mm, give 0.4mm for tolerance
 DC_HOLE_1 = 12;         // measured with caliper at 11.6mm
 DC_HOLE_2 = 10.6;       // measured with caliper at 10.3mm
 
@@ -125,7 +130,7 @@ module amp_mainbox() {
         Y_ADD = (floor(AMP / 2) == 1); // if amp / 2 > 0, shift on Y axis
 
         // for amp 0
-        AMP_CORNER_X = WALL + 10 - 1.8;
+        AMP_CORNER_X = WALL + 10 - 3.0;
         AMP_CORNER_Y = BOX_Y - WALL - 25 + 1.8;
 
         // if add x, shift over by one amp + 10mm gap
@@ -133,10 +138,8 @@ module amp_mainbox() {
         // same for y
         AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - MX_Y - 20 : AMP_CORNER_Y;
 
-        echo(AMP=AMP, X_ADD=X_ADD, Y_ADD=Y_ADD, AMP_CORNER_X=AMP_CORNER_X2, AMP_CORNER_Y=AMP_CORNER_Y2);
-
         color("#480059") translate([AMP_CORNER_X2, AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
-        color("#480059") translate([AMP_CORNER_X2 + (MX_PCB_X - 7.2), AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
+        color("#480059") translate([AMP_CORNER_X2 + (MX_PCB_X - 4.8), AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
 
     }
 }
@@ -174,4 +177,4 @@ module amp_lid() {
     }
 }
 amp_mainbox();
-color("#480059") translate([BOX_X+10,0,0]) amp_lid();
+//color("#480059") translate([BOX_X+10,0,0]) amp_lid();
