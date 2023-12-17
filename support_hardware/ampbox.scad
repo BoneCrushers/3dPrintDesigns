@@ -18,6 +18,7 @@
 // use some convenience libraries
 use <libraries/openbox.scad>
 use <libraries/screwpost.scad>
+use <libraries/amp_mount.scad>
 
 $fs = 0.4; // 0.4mm minimum feature size for 3d printing
 
@@ -79,7 +80,7 @@ module amp_mainbox() {
                 cylinder(h=WALL*3,r=PHONE_HOLE / 2);
         }
 
-        // One hole for the barrel power jack
+        // One hole for the barrel power jack with straightened sides for keying
         // Center the hole along the x axis.
         color("red") translate([BOX_X / 2,-WALL,D_DIST_FROM_BOTTOM]) amp_dc_hole();
 
@@ -95,11 +96,12 @@ module amp_mainbox() {
         }
 
         // a 5mm hole for a power LED
+        // slightly undersized for a snug fit (v2)
         // Put the hole directly below the rightmost 3.5mm jack
         color("red") translate([C_DIST * 4, 0, L_DIST_FROM_BOTTOM])
-            translate([0,WALL*2,2.5])
+            translate([0,WALL*2+0.1,2.6])
             rotate([90,0,0])
-            cylinder(h=WALL*3,r=2.5);
+            cylinder(h=WALL*3,r=2.4);
 
         // a 5mm hole for a power switch
         // Put the hole directly below the leftmost 3.5mm jack
@@ -125,21 +127,43 @@ module amp_mainbox() {
     // So the screw hole left and top position must be 3mm from the screw hole
     // Math: Since screw hole is 1.2mm in on both axes, screw post edge is simply 1.8mm from corner of PCB.
 
+    // V2 - NO MORE AMP SCREW POSTS, Instead we do ampbox mounts.
+    // for (AMP = [0 : 3]) {
+    //     X_ADD = (AMP % 2 == 1); // if amp % 2 is not 0, shift on X axis
+    //     Y_ADD = (floor(AMP / 2) == 1); // if amp / 2 > 0, shift on Y axis
+
+    //     // for amp 0
+    //     AMP_CORNER_X = WALL + 10 - 3.0;
+    //     AMP_CORNER_Y = BOX_Y - WALL - 25 + 1.8;
+
+    //     // if add x, shift over by one amp + 10mm gap
+    //     AMP_CORNER_X2 = X_ADD ? AMP_CORNER_X + MX_X + 20 : AMP_CORNER_X;
+    //     // same for y
+    //     AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - MX_Y - 20 : AMP_CORNER_Y;
+
+    //     color("#480059") translate([AMP_CORNER_X2, AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
+    //     color("#480059") translate([AMP_CORNER_X2 + (MX_PCB_X - 4.8), AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
+
+    // }
+
+    // The amp mount plates are 23.4mm (x) by 26.4mm (y)
+    AMP_PLATE_X = 23.4;
+    AMP_PLATE_Y = 26.4;
+
     for (AMP = [0 : 3]) {
         X_ADD = (AMP % 2 == 1); // if amp % 2 is not 0, shift on X axis
         Y_ADD = (floor(AMP / 2) == 1); // if amp / 2 > 0, shift on Y axis
 
         // for amp 0
-        AMP_CORNER_X = WALL + 10 - 3.0;
-        AMP_CORNER_Y = BOX_Y - WALL - 25 + 1.8;
+        AMP_CORNER_X = WALL + 15 - 3.0;
+        AMP_CORNER_Y = BOX_Y - WALL - 40 + 1.8;
 
         // if add x, shift over by one amp + 10mm gap
-        AMP_CORNER_X2 = X_ADD ? AMP_CORNER_X + MX_X + 20 : AMP_CORNER_X;
+        AMP_CORNER_X2 = X_ADD ? AMP_CORNER_X + AMP_PLATE_X + 10 : AMP_CORNER_X;
         // same for y
-        AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - MX_Y - 20 : AMP_CORNER_Y;
+        AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - AMP_PLATE_Y - 10 : AMP_CORNER_Y;
 
-        color("#480059") translate([AMP_CORNER_X2, AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
-        color("#480059") translate([AMP_CORNER_X2 + (MX_PCB_X - 4.8), AMP_CORNER_Y2, WALL]) screwpost(h=6,r=3,t=2,sh=6);
+        color("#480059") translate([AMP_CORNER_X2, AMP_CORNER_Y2, WALL - 0.01]) amp_mount();
 
     }
 }
@@ -177,4 +201,4 @@ module amp_lid() {
     }
 }
 amp_mainbox();
-//color("#480059") translate([BOX_X+10,0,0]) amp_lid();
+color("#480059") translate([BOX_X+10,0,0]) amp_lid();
