@@ -43,12 +43,19 @@ module strap_loop() {
 
 // START CONSTRUCTION - RIGHT EARPIECE
 
-module headset_right() {
+module headset(right=false) {
     // The main headphone base
     base();
     difference() {
         frame();
-        translate([15.25, 9, 5]) cube([11, 7, 10.01]);
+        if (right==true) {
+            //Right
+            translate([15.25, 9, 5]) cube([11, 7, 10.01]);
+        }
+        else {
+            // Left
+            translate([71.25, 9, 5]) cube([11, 7, 10.01]);
+        }
     }
 
     // The holes for the pegs from the other half
@@ -64,7 +71,18 @@ module headset_right() {
     translate([74.5, 118 / 2 - (25.25 / 2), 0.4]) translate([18, 0, 0]) rotate(90) transducer_holder();
 
     // The strap loop
-    translate([-5, 118 / 2 - (20.4 / 2), 0.01]) strap_loop();
+
+    if (right==true) {
+        // Right
+        translate([-5, 118 / 2 - (20.4 / 2), 0.01]) strap_loop();
+    }
+    else {
+        // Left
+        translate([97 + 5, 118 / 2 - (20.4 / 2), 0.01]) mirror([1,0,0])  strap_loop();
+    }
+    // Top
+    translate([38.3,118-2.6,0.01]) rotate(270) translate([-7.6,0,0]) strap_loop();
+
 }
 
 module headset_cover() {
@@ -81,6 +99,7 @@ module headset_cover() {
 
 }
 
-color("#480059") headset_right();
+color("#480059") headset(right=false);
+color("#480059") translate([115,0,0]) headset(right=true);
 
-color("#f7e400") translate([100, 0, 0])  headset_cover();
+//color("#f7e400") translate([110, 0, 0])  headset_cover();
