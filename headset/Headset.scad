@@ -12,11 +12,22 @@ module ellipse_hollow(x=97, y=118, z=10, thickness=2) {
     }
 }
 
-module base() {
-    difference() {
-        ellipse(x=97,y=118,z=0.6);
-        translate([25,24,-0.01]) ellipse(x=47,y=70,z=1.02);
+module ellipse_hollow2(x=97,y=118,z=10,thickness=2) {
+
+    translate([x/2, y/2, 0]) linear_extrude(z) {
+        difference() {
+            scale([x/(2*thickness), y/(2*thickness), 1]) circle(thickness);
+            offset(r = -thickness) scale([x/(2*thickness), y/(2*thickness), 1]) circle(thickness);
+        }
     }
+}
+
+module base() {
+    ellipse_hollow(x=97,y=118,z=0.6,thickness=25);
+    // difference() {
+    //     ellipse(x=97,y=118,z=0.6);
+    //     translate([25,24,-0.01]) ellipse(x=47,y=70,z=1.02);
+    // }
 }
 module frame() {
     ellipse_hollow(x=97, y=118, z=15, thickness=2);
@@ -87,10 +98,11 @@ module headset(right=false) {
 
 module headset_cover() {
 
-    difference() {
-        ellipse(x=93,y=114,z=2);
-        translate([24.5,24,-0.01]) ellipse(x=44,y=66,z=2.02);
-    }
+    ellipse_hollow2(x=93,y=114,z=2,thickness=22);
+    // difference() {
+    //     ellipse(x=93,y=114,z=2);
+    //     translate([22,20,-0.01]) ellipse(x=43,y=76,z=2.02);
+    // }
 
     color("blue") translate([14,16,0.01]) translate([8.4,8.4]) cylinder(h=10, r=6.2);
     color("blue") translate([62,16,0.01]) translate([8.4,8.4]) cylinder(h=10, r=6.2);
@@ -99,7 +111,6 @@ module headset_cover() {
 
 }
 
-color("#480059") headset(right=false);
-color("#480059") translate([115,0,0]) headset(right=true);
+//color("#faa") translate([0,0,2]) headset(right=false);
+translate([2,2,0]) color("#f7e400") headset_cover();
 
-//color("#f7e400") translate([110, 0, 0])  headset_cover();
