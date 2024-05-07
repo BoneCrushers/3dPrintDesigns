@@ -19,6 +19,7 @@
 use <libraries/openbox.scad>
 use <libraries/screwpost.scad>
 use <libraries/amp_mount.scad>
+use <libraries/panelmountethernet.scad>
 
 $fs = 0.4; // 0.4mm minimum feature size for 3d printing
 
@@ -31,7 +32,7 @@ MX_Y = MX_PCB_Y + 5;    // includes right angle Dupont pins
 MX_Z = MX_PCB_Z + 17.4; // includes height of jumper pin + jumper
 
 // Hole sizes
-AVI_HOLE = 16.4;        // spec sheet says 16mm, give 0.4mm for tolerance
+//AVI_HOLE = 16.4;        // spec sheet says 16mm, give 0.4mm for tolerance
 PHONE_HOLE = 6.4;       // measured with caliper at 6mm, give 0.4mm for tolerance
 DC_HOLE_1 = 12;         // measured with caliper at 11.6mm
 DC_HOLE_2 = 10.6;       // measured with caliper at 10.3mm
@@ -39,11 +40,12 @@ DC_HOLE_2 = 10.6;       // measured with caliper at 10.3mm
 WALL = 1.6;             // 1.6mm wall thickness
 
 // Box thickness is currently arbitrary but we'll make it 50.8mm (2 inches).
-BOX_Z = 50.8;
+BOX_Z = 60.8;
 
-J_DIST_FROM_TOP = 8;
+J_DIST_FROM_TOP = 12;
 D_DIST_FROM_BOTTOM = WALL + 8;
-A_DIST_FROM_TOP = 8;
+//A_DIST_FROM_TOP = 8;
+A_DIST_FROM_TOP = 28;
 L_DIST_FROM_BOTTOM = WALL + 11;
 
 // The size (x,y) of the box will be:
@@ -53,7 +55,7 @@ L_DIST_FROM_BOTTOM = WALL + 11;
 //   * 20mm clearance between each amp in y axis
 //   * extra 10mm clearance in the front and back for cabling, screw posts...
 
-BOX_X = (WALL * 2) + (MX_X * 2) + 30;
+BOX_X = (WALL * 2) + (MX_X * 2) + 60;
 BOX_Y = (WALL * 2) + (MX_Y * 2) + 70;
 
 module amp_mainbox() {
@@ -84,16 +86,24 @@ module amp_mainbox() {
         // Center the hole along the x axis.
         color("red") translate([BOX_X / 2,-WALL,D_DIST_FROM_BOTTOM]) amp_dc_hole();
 
-        // Two holes for the aviation jacks
+        // Two panel mount ethernet mount points
         A_DIST = BOX_X / 3;
-
         for (J = [1 : 2]) {
-            color("cyan") translate([A_DIST * J + WALL, BOX_Y - WALL, BOX_Z - A_DIST_FROM_TOP - AVI_HOLE])
-                // moving UPWARDS from cylinder, at this point the cylinder's center point is at 0,0,0 and it's rotated vertically.
-                translate([0,WALL*2,AVI_HOLE / 2])
-                rotate([90,0,0])
-                cylinder(h=WALL*3,r=AVI_HOLE / 2);
+            color("cyan") translate([A_DIST * J + (J == 2 ? 6 : -6) + WALL, BOX_Y - WALL, BOX_Z - A_DIST_FROM_TOP])
+                scale([1,3,1])
+                ethernet_mount();
         }
+
+        // // Two holes for the aviation jacks
+        // A_DIST = BOX_X / 3;
+
+        // for (J = [1 : 2]) {
+        //     color("cyan") translate([A_DIST * J + WALL, BOX_Y - WALL, BOX_Z - A_DIST_FROM_TOP - AVI_HOLE])
+        //         // moving UPWARDS from cylinder, at this point the cylinder's center point is at 0,0,0 and it's rotated vertically.
+        //         translate([0,WALL*2,AVI_HOLE / 2])
+        //         rotate([90,0,0])
+        //         cylinder(h=WALL*3,r=AVI_HOLE / 2);
+        // }
 
         // a 5mm hole for a power LED
         // slightly undersized for a snug fit (v2)
@@ -155,13 +165,13 @@ module amp_mainbox() {
         Y_ADD = (floor(AMP / 2) == 1); // if amp / 2 > 0, shift on Y axis
 
         // for amp 0
-        AMP_CORNER_X = WALL + 15 - 3.0;
+        AMP_CORNER_X = WALL + 25 - 3.0;
         AMP_CORNER_Y = BOX_Y - WALL - 40 + 1.8;
 
         // if add x, shift over by one amp + 10mm gap
-        AMP_CORNER_X2 = X_ADD ? AMP_CORNER_X + AMP_PLATE_X + 10 : AMP_CORNER_X;
+        AMP_CORNER_X2 = X_ADD ? AMP_CORNER_X + AMP_PLATE_X + 30 : AMP_CORNER_X;
         // same for y
-        AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - AMP_PLATE_Y - 10 : AMP_CORNER_Y;
+        AMP_CORNER_Y2 = Y_ADD ? AMP_CORNER_Y - AMP_PLATE_Y - 30 : AMP_CORNER_Y;
 
         color("#480059") translate([AMP_CORNER_X2, AMP_CORNER_Y2, WALL - 0.01]) amp_mount();
 
@@ -201,4 +211,5 @@ module amp_lid() {
     }
 }
 amp_mainbox();
-color("#480059") translate([BOX_X+10,0,0]) amp_lid();
+//color("#480059") translate([BOX_X+10,0,0]) amp_lid();
+
