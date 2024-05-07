@@ -11,7 +11,7 @@ The box contains mounting points for the four MAX98306 amplifier boards and also
 The links here may point to multiple quantities and sizes in kits. The quantity and size needed for the project are given. 
 
 * 4x [PAM8403 amplifier boards](https://www.amazon.com/HiLetgo%C2%AE-PAM8403-Digital-Amplifier-2-5-5V/dp/B00LODGV64)
-* 2x [5 pin aviation connectors](https://www.amazon.com/dp/B07GZJYC91)
+* 2x [panel mount Ethernet connectors](https://www.amazon.com/gp/product/B06Y4J9MZ4)
 * 4x [3.5mm panel mount jacks](https://www.amazon.com/dp/B01C3RFHDC)
 * 4x [3.5mm aux cables](https://www.amazon.com/dp/B07TCFQ3MG)
 * Some bits of wire and connectors to connect everything together inside the box
@@ -19,7 +19,6 @@ The links here may point to multiple quantities and sizes in kits. The quantity 
 
 ## Measurements
 
-* *Aviation connector*: 16mm (less than 18mm) hole needed in model. Set to 16.4mm for tolerance.
 * *3.5mm connector*: 6mm (less than 8mm) hole needed in model. Set to 8.4mm for tolerance.
 * *PAM8403 amplifier board*:
     * 18mm (x) by 22mm (y)
@@ -33,5 +32,10 @@ The links here may point to multiple quantities and sizes in kits. The quantity 
 
 TODO: include a visual schematic of the wiring diagram
 
-* Each 5-pin aviation connector connects to one ear cup of the headset. 
-* **The PAM8403 is a differential amplifier**, therefore the negative terminals of the outputs *cannot* be tied together. However, we can simply ignore the negative outputs and use only the positive output to one side of each speaker, and connect the other side to the common system ground. This results in half the amplitude, but for this project that should be sufficient.
+* Each ear of the headset uses an Ethernet (RJ45) connector.
+    * Wiring for each ear: 
+        * Bottom: brown/brown-white
+        * Front: green/green-white
+        * Back: blue/blue-white
+        * Top: orange/orange-white
+    * When looking at the QC Passed sticker on the transducer, the solid color wire should be soldered to the *left* terminal. Don't mix these up - messing up the polarity can result in phase issues with sound output, producing inaccurate results.

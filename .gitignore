@@ -2,3 +2,5 @@
 *.stl
 # don't include generated Gcode - it's printer-specific.
 *.gcode
+# don't include compiled models
+*.3mf
