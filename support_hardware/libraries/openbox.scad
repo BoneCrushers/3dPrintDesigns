@@ -29,7 +29,10 @@ module openbox(size,ww=1.6,center=false) {
          
         linear_extrude(height=z) 
         difference() {
-            square([x,y],center=true);
+            minkowski() {
+                square([x-2.4,y-2.4],center=true);
+                circle(r=1.2);
+            }
             offset(-ww) square([x,y],center=true);
         }
         
@@ -54,9 +57,12 @@ module openbox_lid(size,ww=1.6,offset=0.4,center=false) {
     ty = center ? -y/2 : 0;
     tz = center ? -ww : 0;
     
-    translate([tx,ty,tz]) {
+    translate([tx+1.2,ty+1.2,tz]) {
         // Generate lid
-        cube([x,y,ww]);
+        minkowski() {
+            cube([x-2.4,y-2.4,ww-1.2]);
+            cylinder(r=1.2,height=1);
+        }
         // Generate inner lid
         translate([ww+offset,ww+offset,ww-0.01]) cube([x-(ww*2)-(offset*2),y-(ww*2)-(offset*2),ww+0.01]);
     }

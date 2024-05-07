@@ -4,6 +4,7 @@
 // design by Flint Million - 11-2023
 
 // History:
+//  v3.1 - curve corners of box
 //  v3 - switch to panel mount Ethernet jacks
 //       enlarge box for easier wire management
 //         and to fit ethernet jacks better
@@ -213,6 +214,6 @@ module amp_lid() {
         color("blue") translate([WALL+2-0.1,BOX_Y - (WALL+2-0.1),-0.01]) cylinder(r=1.6,h=WALL*2+0.02);
     }
 }
-amp_mainbox();
+//amp_mainbox();
 color("#480059") translate([BOX_X+10,0,0]) amp_lid();
 
