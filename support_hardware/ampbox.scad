@@ -215,5 +215,5 @@ module amp_lid() {
     }
 }
 //amp_mainbox();
-color("#480059") translate([BOX_X+10,0,0]) amp_lid();
+translate([BOX_X+10,0,0]) amp_lid();
 

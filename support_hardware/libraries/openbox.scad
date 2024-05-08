@@ -64,6 +64,6 @@ module openbox_lid(size,ww=1.6,offset=0.4,center=false) {
             cylinder(r=1.2,height=1);
         }
         // Generate inner lid
-        translate([ww+offset,ww+offset,ww-0.01]) cube([x-(ww*2)-(offset*2),y-(ww*2)-(offset*2),ww+0.01]);
+        translate([ww+offset-1.2,ww+offset-1.2,ww-1]) cube([x-(ww*2)-(offset*2),y-(ww*2)-(offset*2),ww+1]);
     }
 }
